@@ -10,7 +10,6 @@ import (
 
 func main() {
 	for _, n := range input() {
-		//For each test case, print an integer that denotes the sum of all the multiples of  or  below .
 		fmt.Println(getResult(n))
 	}
 }
