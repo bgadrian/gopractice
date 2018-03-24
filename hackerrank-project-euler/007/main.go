@@ -13,10 +13,12 @@ func main() {
 	}
 }
 
+//to pass all tests, the trick is to store/memoize the already calculated values
+var arr = []int{2, 3}
+var counter = 4
+
 func getResult(n int) int {
 	//https://en.wikipedia.org/wiki/Formula_for_primes
-	arr := []int{2, 3}
-	counter := 4
 	tmp := 0
 
 	for len(arr) < n {
@@ -34,7 +36,7 @@ func getResult(n int) int {
 		}
 		counter++
 	}
-	return arr[len(arr)-1]
+	return arr[n-1]
 }
 
 func input() (ints []int) {
