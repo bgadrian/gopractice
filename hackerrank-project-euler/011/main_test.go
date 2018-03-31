@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"sort"
+	"testing"
+)
 
 func TestResult(t *testing.T) {
 	in := [][]int{{89, 90, 95, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8},
@@ -71,15 +74,16 @@ func TestGetResultDiag(t *testing.T) {
 	in := [][]int{
 		{0, 0, 0, 0, 0, 0},
 		{2, 2, 3, 3, 3, 3},
-		{2, 3, 0, 0, 0, 0},
+		{2, 3, 0, 1, 0, 0},
 		{2, 0, 2, 2, 2, 2},
 		{2, 3, 2, 2, 2, 2},
 		{8, 3, 2, 2, 2, 2},
 	}
-	out := 2 * 3 * 2 * 2
+	out := 1 * 2 * 3 * 8
 	r := getResultDiag(in)
 
-	if r != out {
+	sort.Ints(r)
+	if r[len(r)-1] != out {
 		t.Errorf("exp %v got %v", out, r)
 	}
 }
