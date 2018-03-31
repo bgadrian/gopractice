@@ -1,7 +1,6 @@
 package main
 
 import (
-	"sort"
 	"testing"
 )
 
@@ -28,62 +27,10 @@ func TestResult(t *testing.T) {
 		{1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48}}
 	out := 73812150
 
-	r := getResult(in)
+	r := getResult(in, 4)
 
 	if r != out {
 		t.Errorf("exp %v got %v", out, r)
 	}
 
-}
-
-func TestGetRows(t *testing.T) {
-	in := [][]int{
-		{0, 0, 0, 200, 100, 50},
-		{2, 2, 3, 3, 3, 3},
-		{2, 3, 0, 0, 0, 0},
-		{2, 3, 2, 2, 2, 2},
-		{2, 3, 2, 2, 2, 2},
-		{2, 3, 2, 2, 2, 2},
-	}
-	out := 3 * 3 * 3 * 3
-	r := getResultRows(in)
-
-	if r != out {
-		t.Errorf("exp %v got %v", out, r)
-	}
-}
-
-func TestGetCols(t *testing.T) {
-	in := [][]int{
-		{0, 0, 0, 0, 0, 0},
-		{2, 2, 3, 3, 3, 3},
-		{2, 3, 0, 0, 0, 0},
-		{2, 0, 2, 2, 2, 2},
-		{2, 3, 2, 2, 2, 2},
-		{8, 3, 2, 2, 2, 2},
-	}
-	out := 2 * 2 * 2 * 8
-	r := getResultCols(in)
-
-	if r != out {
-		t.Errorf("exp %v got %v", out, r)
-	}
-}
-
-func TestGetResultDiag(t *testing.T) {
-	in := [][]int{
-		{0, 0, 0, 0, 0, 0},
-		{2, 2, 3, 3, 3, 3},
-		{2, 3, 0, 1, 0, 0},
-		{2, 0, 2, 2, 2, 2},
-		{2, 3, 2, 2, 2, 2},
-		{8, 3, 2, 2, 2, 2},
-	}
-	out := 1 * 2 * 3 * 8
-	r := getResultDiag(in)
-
-	sort.Ints(r)
-	if r[len(r)-1] != out {
-		t.Errorf("exp %v got %v", out, r)
-	}
 }
