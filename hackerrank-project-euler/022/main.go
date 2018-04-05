@@ -19,7 +19,7 @@ func main() {
 //Because ALL the names are given from the begining AND there are no duplicates
 //and no names are added after we can precalculate all of them
 //and store them to a map so the query Lookup is O(1)
-//for a short period of time we occupy O(3n) memory
+//for a short period of time we occupy O(3n) memory and Time is O(logn for sort + n) + m (number of letters?)
 func getScoreMap(names []string) map[string]int {
 	sort.Strings(names)
 	res := make(map[string]int, len(names))
