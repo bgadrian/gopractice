@@ -1,12 +1,15 @@
 package main
 
+import (
+	"fmt"
+	"log"
+)
+
 //https://www.hackerrank.com/contests/projecteuler/challenges/euler107
-//
-//func main() {
-//	for _, n := range input() {
-//		fmt.Println(getResult(n))
-//	}
-//}
+
+func main() {
+	fmt.Println(getResult(input()))
+}
 
 type edge struct {
 	u, v, w int
@@ -14,39 +17,46 @@ type edge struct {
 
 //prim's algorithm
 func getResult(edges []*edge) int {
+	var ed *edge
 	done := make(map[int]struct{})
-	maxNode := 0
+	maxNode := 1
 	//select first random node and count them
 	done[edges[0].u] = struct{}{}
-	for _, e := range edges {
-		if e.u > maxNode {
-			maxNode = e.u
+	for _, ed = range edges {
+		if ed.u > maxNode {
+			maxNode = ed.u
 		}
-		if e.v > maxNode {
-			maxNode = e.u
+		if ed.v > maxNode {
+			maxNode = ed.v
 		}
 	}
 
-	//initializing the data stores
-	matrix := make([][]int, maxNode-1)
-	minimalMatrix := make([][]int, maxNode-1)
-	for row := 0; row < maxNode; row++ {
-		matrix[row] = make([]int, maxNode)
-		minimalMatrix[row] = make([]int, maxNode)
+	var rowIndex, colIndex int
 
-		for col := 0; col < maxNode; col++ {
-			matrix[row][col] = -1        //we have 0 weight edges
-			minimalMatrix[row][col] = -1 //we have 0 weight edges
+	//initializing the data stores
+	matrix := make([][]int, maxNode)
+	minimalMatrix := make([][]int, maxNode)
+	for rowIndex = 0; rowIndex < maxNode; rowIndex++ {
+		matrix[rowIndex] = make([]int, maxNode)
+		minimalMatrix[rowIndex] = make([]int, maxNode)
+
+		for colIndex = 0; colIndex < maxNode; colIndex++ {
+			matrix[rowIndex][colIndex] = -1        //we have 0 weight edges
+			minimalMatrix[rowIndex][colIndex] = -1 //we have 0 weight edges
 		}
 	}
 
 	//populating the original matrix
-	for _, edge := range edges {
+	for _, ed = range edges {
 		//defaults are -1
-		currentValue := matrix[edge.u][edge.v]
-		hasValue := matrix[edge.u][edge.v] > -1
-		if hasValue == false || currentValue < edge.w {
-			matrix[edge.u][edge.v] = edge.w
+		rowIndex = ed.u - 1
+		colIndex = ed.v - 1
+		currentValue := matrix[rowIndex][colIndex]
+		hasValue := matrix[rowIndex][colIndex] > -1
+		//deal with duplicate edges, keep the smallest
+		if hasValue == false || ed.w < currentValue {
+			matrix[rowIndex][colIndex] = ed.w
+			matrix[colIndex][rowIndex] = ed.w
 		}
 	}
 
@@ -55,12 +65,36 @@ func getResult(edges []*edge) int {
 		//get all edges from all done nodes
 		//get the lowest edge
 		//add the edge and node to the result
+
+		nextNodeA, nextNodeB, nextWeight := 0, 0, -1
+		for nodeDone := range done {
+			for nextIndex, weight := range matrix[nodeDone-1] {
+				if weight == -1 {
+					continue //no edge
+				}
+
+				nodeB := nextIndex + 1
+				if _, isDone := done[nodeB]; isDone {
+					continue
+				}
+
+				if nextWeight == -1 || weight < nextWeight {
+					nextNodeA = nodeDone
+					nextNodeB = nodeB
+					nextWeight = weight
+				}
+			}
+		}
+		done[nextNodeB] = struct{}{}
+		minimalMatrix[nextNodeA-1][nextNodeB-1] = nextWeight
+		minimalMatrix[nextNodeB-1][nextNodeA-1] = nextWeight
 	}
 
 	//new sum of weights
 	s := 0
-	for _, row := range minimalMatrix {
-		for _, weight := range row {
+	for rowIndex = 0; rowIndex < maxNode; rowIndex++ {
+		for colIndex = 0; colIndex < rowIndex; colIndex++ {
+			weight := minimalMatrix[rowIndex][colIndex]
 			if weight == -1 {
 				continue
 			}
@@ -70,25 +104,23 @@ func getResult(edges []*edge) int {
 	return s
 }
 
-//
-//func input() (ints []int) {
-//	var T int
-//
-//	_, err := fmt.Scanln(&T)
-//	if err != nil {
-//		log.Panic(err)
-//	}
-//
-//	var n int
-//
-//	for l := T; l > 0; l-- {
-//		_, err = fmt.Scanln(&n)
-//		if err != nil {
-//			log.Panic(err)
-//		}
-//
-//		ints = append(ints, n)
-//	}
-//
-//	return
-//}
+func input() (edges []*edge) {
+	var maxNode, T int
+
+	_, err := fmt.Scanf("%d %d", &maxNode, &T)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	for l := T; l > 0; l-- {
+		ed := &edge{}
+		_, err = fmt.Scanf("%d %d %d", &ed.u, &ed.v, &ed.w)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		edges = append(edges, ed)
+	}
+
+	return
+}
