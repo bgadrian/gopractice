@@ -18,12 +18,11 @@ func solution(s []rune) bool {
 
 	//if the characters are only ASCII, we can make a 255 bits array
 	//0 value means the [index] character has even occurrences or 0
-	//1 means it has odd
+	//1 means it has odd, and we keep swapping the values for each duplicate
 	//at the end we must have at most 1 value of 1
 	//int64 has only 64bits, so we can use it only if we have max 64 distinct characters
 	//we can presume we only have letters (26) so is safe to use for now even a int32, otherwise we will make an array of booleans
 
-	allowed := uint(1)
 	var count uint
 	for _, r := range s {
 		//we ignore punctuation
@@ -32,19 +31,11 @@ func solution(s []rune) bool {
 		}
 		rc := unicode.ToLower(r)
 		bit := uint(rc - 'a')
-		count ^= 1 << bit
+		count ^= 1 << bit //flip/swap the value
 	}
 
-	odds := uint(0)
-	for bit := uint(0); bit < 32; bit++ {
-		if count&(1<<bit) == 0 { //has bits[bit] == 0, even, ignore
-			continue
-		}
-		odds++
-		if odds > allowed {
-			return false
-		}
-	}
-
-	return true
+	//number AND number -1 should be 0 if it only has 1 bit of value 1
+	//00010000 - 1 = 00001111
+	//00010000 & 00001111 = 0
+	return count == 0 || (count&(count-1) == 0)
 }
