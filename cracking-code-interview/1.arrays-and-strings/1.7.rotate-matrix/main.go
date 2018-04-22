@@ -18,11 +18,8 @@ func solution(m [][]int) {
 		row, col int
 	}
 
-	get := func(position *p) int {
-		return m[position.row][position.col]
-	}
-	set := func(position *p, newVal int) {
-		m[position.row][position.col] = newVal
+	swap := func(p1, p2 *p) {
+		m[p1.row][p1.col], m[p2.row][p2.col] = m[p2.row][p2.col], m[p1.row][p1.col]
 	}
 
 	for layer := 0; layer < (len(m) / 2); layer++ {
@@ -42,11 +39,11 @@ func solution(m [][]int) {
 			right := &p{topRight.row + i, topRight.col}        //top to bottom
 			bottom := &p{bottomRight.row, bottomRight.col - i} //right to left
 
-			tmp := get(bottom)
-			set(bottom, get(right))
-			set(right, get(top))
-			set(top, get(left))
-			set(left, tmp)
+			//instead of using a temporary variable, we can use the awesome
+			//go feature: a,b = b,a and rotate the values
+			swap(top, right)
+			swap(bottom, left)
+			swap(bottom, top)
 		}
 	}
 }
