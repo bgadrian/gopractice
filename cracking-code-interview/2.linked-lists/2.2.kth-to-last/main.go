@@ -48,10 +48,10 @@ func solutionIt(a []int, k int) int {
 
 	short, long := list.Front(), list.Front()
 	for i := 0; i < k; i++ {
-		long = long.Next()
 		if long == nil {
 			log.Panic("k is longer then the length")
 		}
+		long = long.Next()
 	}
 
 	for long != nil {
