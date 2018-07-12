@@ -23,7 +23,6 @@ Solution[i] < Solution[j] iff Solution[i][0] < Solution[j][0] OR (Solution[i][0]
 */
 func solution(A []int, target int) (result [][]int) {
 	s := A
-	//sort.Ints(s)
 	ls := len(s)
 	if ls < 4 {
 		return //panic? cannot make quadruplet out of <4 items
@@ -34,14 +33,8 @@ func solution(A []int, target int) (result [][]int) {
 	cache := make(map[int][][2]int) //sum => list of indexs pair that make that sum
 	for cIndex := 0; cIndex < ls-1; cIndex++ {
 		c := s[cIndex]
-		//if cIndex > 1 && s[cIndex-1] == c {
-		//	continue
-		//}
 		for dIndex := cIndex + 1; dIndex < ls; dIndex++ {
 			d := s[dIndex]
-			//if s[dIndex-1] == d {
-			//	continue
-			//}
 			sum := c + d
 			ABSum := target - sum
 
@@ -54,7 +47,6 @@ func solution(A []int, target int) (result [][]int) {
 						continue
 					}
 					tmp := []int{a, b, c, d}
-					//tmp := []int{abPair[0], abPair[1], c, d}
 					sort.Ints(tmp)
 
 					//we count the unique results using a toString hack
@@ -65,7 +57,6 @@ func solution(A []int, target int) (result [][]int) {
 					result = append(result, tmp)
 
 					//add the slice to result
-					//result = append(result, tmp)
 					resSet[asStr] = struct{}{}
 				}
 			}
